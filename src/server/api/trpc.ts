@@ -1,17 +1,17 @@
 import { initTRPC } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import cookie from 'cookie';
-import jsonwebtoken from 'jsonwebtoken';
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { SECRET_KEY } from "./routers/example";
+import { validateToken } from "~/utils/jwt";
 
 export const createTRPCContext = ({req, res}: CreateNextContextOptions) => {
   const cookies = cookie.parse(req.headers.cookie ?? '')
   const authToken = cookies.token
+  console.log(authToken)
 
   return {
-    isAuthed: typeof authToken === 'string' && jsonwebtoken.verify(authToken, SECRET_KEY),
+    isAuthed: validateToken(authToken ?? ''),
     setToken(token: string) {
       console.log('ESTABLECIENDO TOKEN', token)
       res.appendHeader('Set-Cookie', cookie.serialize('token', token))

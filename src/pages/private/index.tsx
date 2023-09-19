@@ -1,18 +1,10 @@
-"use client"
-
-import { useCookies } from 'react-cookie';
 import { api } from '~/utils/api';
+import { AuthedComponent } from '../../components/AuthedComponent';
 
-export default function Private() {
-    const mensaje = api.main.privateDate.useQuery()
-
-    const [cookies] = useCookies();
-
-    if (!cookies.token) {
-        return (<p>No autorizado</p>)
-    }
+export default AuthedComponent(function Private() {
+    const mensaje = api.private.privateDate.useQuery()
 
     return (
         <p>Mensaje secreto: {mensaje.data?.msg}</p>
     )
-}
+})

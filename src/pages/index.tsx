@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useCookies } from 'react-cookie';
 import { useForm } from "react-hook-form";
+import { UnauthedComponent } from "~/components/AuthedComponent";
 import { api } from "~/utils/api";
 
-export default function Home() {
+export default UnauthedComponent(function Home() {
   const [cookies, setCookie, removeCookie] = useCookies();
+  const router = useRouter()
 
   const login = api.main.login.useMutation()
   const {
@@ -17,6 +20,9 @@ export default function Home() {
     const result = await login.mutateAsync(data)
     setCookie('token', result.token)
     console.log(result)
+    if (result.success) {
+      void router.push('/private')
+    }
   }
 
   return (
@@ -35,4 +41,4 @@ export default function Home() {
       </main>
     </>
   );
-}
+})
