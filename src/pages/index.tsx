@@ -1,9 +1,20 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import Head from "next/head";
+import { useForm } from "react-hook-form";
 
 import { api } from "~/utils/api";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const login = api.main.login.useMutation()
+  const {
+    register,
+    handleSubmit
+  } = useForm<any>()
+
+  const onSubmit = async (data: any) => {
+    const result = await login.mutateAsync(data)
+    console.log(result)
+  }
 
   return (
     <>
@@ -13,7 +24,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <p>{hello.data?.greeting}</p>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input {...register('login')} placeholder="login" />
+          <input {...register('password')} placeholder="password" type="password" />
+          <button type="submit">submit</button>
+        </form>
       </main>
     </>
   );
