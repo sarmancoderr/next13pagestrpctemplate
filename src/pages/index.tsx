@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import Head from "next/head";
+import { useCookies } from 'react-cookie';
 import { useForm } from "react-hook-form";
-
 import { api } from "~/utils/api";
 
 export default function Home() {
+  const [cookies, setCookie, removeCookie] = useCookies();
+
   const login = api.main.login.useMutation()
   const {
     register,
@@ -13,6 +15,7 @@ export default function Home() {
 
   const onSubmit = async (data: any) => {
     const result = await login.mutateAsync(data)
+    setCookie('token', result.token)
     console.log(result)
   }
 

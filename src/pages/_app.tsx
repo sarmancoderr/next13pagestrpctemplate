@@ -1,5 +1,6 @@
 import { type AppType } from "next/app";
 
+import { CookiesProvider } from 'react-cookie';
 import { api } from "~/utils/api";
 
 import { useEffect } from "react";
@@ -10,7 +11,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     // addToHomescreen()
   })
   return (
-    <Component {...pageProps} />
+    <CookiesProvider>
+      <Component {...pageProps} />
+    </CookiesProvider>
   )
 };
 
